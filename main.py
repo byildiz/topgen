@@ -1,11 +1,12 @@
 import os
 import base64
 import urllib.parse
-import payload_pb2
 import hmac
 import time
 import argparse
 import tqdm
+
+import payload_pb2
 
 INTERVAL = 30
 
@@ -54,25 +55,49 @@ def read(filename, payload):
         payload.ParseFromString(f.read())
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser("TOPG - Time-based one-time password generator")
-    parser.add_argument("--db", required=False, default="payload.db")
-    parser.add_argument("--url", required=False)
-    args = parser.parse_args()
+def get_name(p):
+    return f"{p.issuer} ({p.name})"
 
+
+def main(args):
     try:
         payload = payload_pb2.Payload()
         if os.path.exists(args.db):
             read(args.db, payload)
         if args.url:
             payload.MergeFrom(decode_url(args.url))
-        save(args.db, payload)
+            save(args.db, payload)
+
+        if args.add:
+            secret = input("Secret > ")
+            try:
+                secret = base64.b32decode(secret)
+            except:
+                print(
+                    f'Given secret "{secret}" is not valid. Secret must be base32 decodeable.'
+                )
+                return
+            name = input("Name > ")
+            issuer = input("Issuer > ")
+            p = payload.otp_parameters.add()
+            p.secret = secret
+            p.name = name
+            p.issuer = issuer
+            p.algorithm = payload_pb2.Payload.Algorithm.ALGORITHM_SHA1
+            p.digits = payload_pb2.Payload.DigitCount.DIGIT_COUNT_SIX
+            p.type = payload_pb2.Payload.OtpType.OTP_TYPE_TOTP
+            save(args.db, payload)
 
         if len(payload.otp_parameters) > 0:
+            if args.print:
+                list_items(payload)
+                return
+
             while True:
                 counter = int(time.time() // INTERVAL)
+                print()
                 for p in payload.otp_parameters:
-                    print(f"{p.issuer} ({p.name}): {totp(p.secret, counter)}")
+                    print(f"{get_name(p)}: {totp(p.secret, counter)}")
                 print()
                 with tqdm.tqdm(total=INTERVAL, bar_format="{bar}") as progress:
                     prev_time = 0
@@ -81,7 +106,24 @@ if __name__ == "__main__":
                         progress.update(curr_time - prev_time)
                         prev_time = curr_time
                         time.sleep(0.5)
-                print()
                 time.sleep(1)
     except KeyboardInterrupt:
         pass
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser("TOPG - Time-based one-time password generator")
+    parser.add_argument(
+        "--db", required=False, default="payload.db", help="file path to store keys"
+    )
+    parser.add_argument(
+        "--url",
+        required=False,
+        help='URL in the form of "otpauth-migration://offline?data=..." to import keys from',
+    )
+    parser.add_argument(
+        "--print", action="store_true", help="list all the keys with their details"
+    )
+    parser.add_argument("--add", action="store_true", help="ldd a new key")
+    args = parser.parse_args()
+    main(args)
