@@ -4,7 +4,7 @@ This is a simple time-based one-time password generator. It is compatible with [
 
 ## Installation
 
-top-g is tested with python 3.10 but it should work all python 3 versions.Requirement packages can be installed in two ways:
+top-g is tested with python 3.10 but it should work all python 3 versions. Requirement packages can be installed in two ways:
 
 1. With pip:
 
