@@ -7,7 +7,7 @@ import urllib.parse
 
 import tqdm
 
-import payload_pb2
+import topg.payload_pb2 as payload_pb2
 
 INTERVAL = 30
 
@@ -79,10 +79,8 @@ def main(args):
             secret = input("Secret > ")
             try:
                 secret = base64.b32decode(secret.replace(" ", ""))
-            except:
-                print(
-                    f'Given secret "{secret}" is not valid. Secret must be base32 decodeable.'
-                )
+            except Exception:
+                print(f'Given secret "{secret}" is not valid. Secret must be base32 decodeable.')
                 return
             name = input("Name > ")
             issuer = input("Issuer > ")
@@ -114,7 +112,7 @@ def main(args):
                     print("Item has not been deleted")
                 return
 
-            if args.print:
+            if args.list:
                 list_items(payload)
                 return
 
@@ -138,17 +136,13 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("TOPG - Time-based one-time password generator")
-    parser.add_argument(
-        "--db", required=False, default="payload.db", help="file path to store keys"
-    )
+    parser.add_argument("--db", required=False, default="payload.db", help="file path to store keys")
     parser.add_argument(
         "--url",
         required=False,
         help='URL in the form of "otpauth-migration://offline?data=..." to import keys from',
     )
-    parser.add_argument(
-        "--print", action="store_true", help="list all the keys with their details"
-    )
+    parser.add_argument("--list", action="store_true", help="list all the keys with their details")
     parser.add_argument("--add", action="store_true", help="add a new key")
     parser.add_argument("--remove", action="store_true", help="remove a key")
     args = parser.parse_args()
