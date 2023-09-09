@@ -1,9 +1,10 @@
-import os
-import base64
-import urllib.parse
-import hmac
-import time
 import argparse
+import base64
+import hmac
+import os
+import time
+import urllib.parse
+
 import tqdm
 
 import payload_pb2
@@ -26,15 +27,20 @@ def totp(key: bytes, counter: int):
 
 
 def list_items(payload):
-    for p in payload.otp_parameters:
-        print("Secret:", base64.b32encode(p.secret).decode())
-        print("Name: ", p.name)
-        print("Issuer: ", p.issuer)
-        print("Algorithm: ", p.algorithm)
-        print("Digits: ", p.digits)
-        print("Type: ", p.type)
-        print("Counter: ", p.counter)
-        print()
+    for i, p in enumerate(payload.otp_parameters):
+        print(f"#{i}")
+        print_item(p)
+
+
+def print_item(p):
+    print("Secret:", base64.b32encode(p.secret).decode())
+    print("Name: ", p.name)
+    print("Issuer: ", p.issuer)
+    print("Algorithm: ", p.algorithm)
+    print("Digits: ", p.digits)
+    print("Type: ", p.type)
+    print("Counter: ", p.counter)
+    print()
 
 
 def decode_url(url):
@@ -89,7 +95,24 @@ def main(args):
             p.type = payload_pb2.Payload.OtpType.OTP_TYPE_TOTP
             save(args.db, payload)
 
-        if len(payload.otp_parameters) > 0:
+        num_items = len(payload.otp_parameters)
+        if num_items > 0:
+            if args.remove:
+                list_items(payload)
+                index = int(input(f"Select index to delete [0-{num_items - 1}]> "))
+                if index < 0 or index >= num_items:
+                    print(f"Index have to be between 0-{len(num_items - 1)}")
+                    return
+                print_item(payload.otp_parameters[index])
+                answer = input("Are you sure to delete above item? [y,N] > ")
+                if answer == "y":
+                    del payload.otp_parameters[index]
+                    save(args.db, payload)
+                    print("Item has been deleted")
+                else:
+                    print("Item has not been deleted")
+                return
+
             if args.print:
                 list_items(payload)
                 return
@@ -125,6 +148,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--print", action="store_true", help="list all the keys with their details"
     )
-    parser.add_argument("--add", action="store_true", help="ldd a new key")
+    parser.add_argument("--add", action="store_true", help="add a new key")
+    parser.add_argument("--remove", action="store_true", help="remove a key")
     args = parser.parse_args()
     main(args)
