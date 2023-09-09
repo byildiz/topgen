@@ -10,6 +10,7 @@ import payload_pb2
 
 INTERVAL = 30
 
+
 # https://stackoverflow.com/questions/8529265/google-authenticator-implementation-in-python
 # https://stackoverflow.com/a/69343235/7075029
 # TOTP: Time-Based One-Time Password Algorithm: https://www.rfc-editor.org/rfc/rfc6238
@@ -71,7 +72,7 @@ def main(args):
         if args.add:
             secret = input("Secret > ")
             try:
-                secret = base64.b32decode(secret)
+                secret = base64.b32decode(secret.replace(" ", ""))
             except:
                 print(
                     f'Given secret "{secret}" is not valid. Secret must be base32 decodeable.'
