@@ -95,6 +95,7 @@ def main(args):
             p.type = payload_pb2.Payload.OtpType.OTP_TYPE_TOTP
             save(args.db, payload)
 
+        payload.otp_parameters.sort(key=lambda p: get_name(p))
         num_items = len(payload.otp_parameters)
         if num_items > 0:
             if args.remove:
