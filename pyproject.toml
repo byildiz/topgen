@@ -1,10 +1,16 @@
 [tool.poetry]
-name = "topg"
+name = "topgen"
 version = "0.1.0"
 description = "Time-based one-time password generator"
 authors = ["Burak Yildiz <0byldz@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+homepage = "https://github.com/byildiz/topgen"
+keywords = ["totp", "totp-generator", "totp-cli", "google-authenticator"]
+classifiers = [
+    "Topic :: Security :: Cryptography",
+    "Topic :: Utilities"
+]
 
 [tool.poetry.dependencies]
 python = ">=3.10"

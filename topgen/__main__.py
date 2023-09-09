@@ -7,7 +7,7 @@ import urllib.parse
 
 import tqdm
 
-import topg.payload_pb2 as payload_pb2
+import topgen.payload_pb2 as payload_pb2
 
 INTERVAL = 30
 
@@ -135,7 +135,7 @@ def main(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("TOPG - Time-based one-time password generator")
+    parser = argparse.ArgumentParser("TOPGen - Time-based one-time password generator")
     parser.add_argument("--db", required=False, default="payload.db", help="file path to store keys")
     parser.add_argument(
         "--url",
