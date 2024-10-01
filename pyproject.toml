@@ -14,8 +14,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.10"
-protobuf = "^4.24.3"
 tqdm = "^4.66.1"
+protobuf = "5.28.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.9.0"
