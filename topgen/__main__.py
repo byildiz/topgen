@@ -76,9 +76,9 @@ def main(args):
             save(args.db, payload)
 
         if args.add:
-            secret = input("Secret > ")
+            secret = input("Secret > ").strip().replace(" ", "")
             try:
-                secret = base64.b32decode(secret.replace(" ", ""))
+                secret = base64.b32decode(secret, casefold=True)
             except Exception:
                 print(f'Given secret "{secret}" is not valid. Secret must be base32 decodeable.')
                 return
@@ -100,7 +100,7 @@ def main(args):
                 list_items(payload)
                 index = int(input(f"Select index to delete [0-{num_items - 1}]> "))
                 if index < 0 or index >= num_items:
-                    print(f"Index have to be between 0-{len(num_items - 1)}")
+                    print(f"Index have to be between 0-{num_items - 1}")
                     return
                 print_item(payload.otp_parameters[index])
                 answer = input("Are you sure to delete above item? [y,N] > ")
