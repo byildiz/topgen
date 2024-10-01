@@ -1,16 +1,13 @@
 [tool.poetry]
 name = "topgen"
-version = "0.1.0"
+version = "0.1.1"
 description = "Time-based one-time password generator"
 authors = ["Burak Yildiz <0byldz@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/byildiz/topgen"
 keywords = ["totp", "totp-generator", "totp-cli", "google-authenticator"]
-classifiers = [
-    "Topic :: Security :: Cryptography",
-    "Topic :: Utilities"
-]
+classifiers = ["Topic :: Security :: Cryptography", "Topic :: Utilities"]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
@@ -43,27 +40,27 @@ unfixable = []
 
 # Exclude a variety of commonly ignored directories.
 exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "venv",
 ]
 per-file-ignores = {}
 
